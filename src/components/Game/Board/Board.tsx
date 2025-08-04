@@ -8,6 +8,7 @@ interface SquareInterface {
 }
 
 function initializeRandomSquare(arr: SquareInterface[][]) {
+    // clone arr
     arr = arr.map((row) => row.map((cell) => ({ ...cell })));
 
     let [randomIndexI, randomIndexJ] = [
@@ -45,20 +46,22 @@ function Board() {
 
     return (
         <>
-            {squares.map((squareArr, index) => {
-                return (
-                    <div className="row" key={index}>
-                        {squareArr.map((square: SquareInterface) => {
-                            return (
-                                <Square
-                                    squareValue={square.value}
-                                    key={square.id}
-                                />
-                            );
-                        })}
-                    </div>
-                );
-            })}
+            <div className="border-stone-300 border-5 rounded-lg">
+                {squares.map((squareArr, index) => {
+                    return (
+                        <div className="row" key={index}>
+                            {squareArr.map((square: SquareInterface) => {
+                                return (
+                                    <Square
+                                        squareValue={square.value}
+                                        key={square.id}
+                                    />
+                                );
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
         </>
     );
 }

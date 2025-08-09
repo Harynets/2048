@@ -7,6 +7,10 @@ interface SquareInterface {
     value: number;
 }
 
+interface Props {
+    setScore: React.Dispatch<React.SetStateAction<number>>;
+}
+
 function initializeRandomSquare(arr: SquareInterface[][]) {
     // clone arr
     arr = arr.map((row) => row.map((cell) => ({ ...cell })));
@@ -20,7 +24,7 @@ function initializeRandomSquare(arr: SquareInterface[][]) {
     return arr;
 }
 
-function Board() {
+function Board({ setScore }: Props) {
     // create a 4x4 matrix filled with SquareInterface objects
     const [squares, setSquares] = useState(() => {
         let arr: SquareInterface[][] = [];
@@ -39,9 +43,19 @@ function Board() {
         return arr;
     });
 
+    const addScoreRef = useRef(0);
+    const squaresRef = useRef(squares);
+
+    // update squares arr every time it changes
+    useEffect(() => {
+        squaresRef.current = squares;
+    }, [squares]);
+
     // handle keyboard event
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
+            if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+
             // create a 4x4 matrix filled with SquareInterface objects
             let arr = new Array();
             for (let i = 0; i < 4; i++) {
@@ -57,81 +71,72 @@ function Board() {
             let freeIndex, prevValue: number;
 
             if (event.key == "ArrowLeft") {
-                setSquares((prevSquares) => {
-                    for (let i = 0; i < 4; i++) {
-                        freeIndex = 0;
-                        prevValue = 0;
-                        for (let j = 0; j < 4; j++) {
-                            if (prevValue && prevSquares[i][j].value == prevValue) {
-                                arr[i][freeIndex - 1].value = prevValue * 2;
-                                prevValue = 0;
-                            } else if (prevSquares[i][j].value) {
-                                arr[i][freeIndex].value = prevSquares[i][j].value;
-                                prevValue = prevSquares[i][j].value;
-                                freeIndex++;
-                            }
+                for (let i = 0; i < 4; i++) {
+                    freeIndex = 0;
+                    prevValue = 0;
+                    for (let j = 0; j < 4; j++) {
+                        if (prevValue && squaresRef.current[i][j].value == prevValue) {
+                            arr[i][freeIndex - 1].value = prevValue * 2;
+                            addScoreRef.current += prevValue * 2;
+                            prevValue = 0;
+                        } else if (squaresRef.current[i][j].value) {
+                            arr[i][freeIndex].value = squaresRef.current[i][j].value;
+                            prevValue = squaresRef.current[i][j].value;
+                            freeIndex++;
                         }
                     }
-                    return initializeRandomSquare(arr);
-                });
+                }
             } else if (event.key == "ArrowRight") {
-                setSquares((prevSquares) => {
-                    for (let i = 3; i >= 0; i--) {
-                        freeIndex = 3;
-                        prevValue = 0;
-                        for (let j = 3; j >= 0; j--) {
-                            if (prevValue && prevSquares[i][j].value == prevValue) {
-                                arr[i][freeIndex + 1].value = prevValue * 2;
-                                prevValue = 0;
-                            } else if (prevSquares[i][j].value) {
-                                arr[i][freeIndex].value = prevSquares[i][j].value;
-                                prevValue = prevSquares[i][j].value;
-                                freeIndex--;
-                            }
+                for (let i = 3; i >= 0; i--) {
+                    freeIndex = 3;
+                    prevValue = 0;
+                    for (let j = 3; j >= 0; j--) {
+                        if (prevValue && squaresRef.current[i][j].value == prevValue) {
+                            arr[i][freeIndex + 1].value = prevValue * 2;
+                            addScoreRef.current += prevValue * 2;
+                            prevValue = 0;
+                        } else if (squaresRef.current[i][j].value) {
+                            arr[i][freeIndex].value = squaresRef.current[i][j].value;
+                            prevValue = squaresRef.current[i][j].value;
+                            freeIndex--;
                         }
                     }
-
-                    return initializeRandomSquare(arr);
-                });
+                }
             } else if (event.key == "ArrowUp") {
-                setSquares((prevSquares) => {
-                    for (let i = 0; i < 4; i++) {
-                        freeIndex = 0;
-                        prevValue = 0;
-                        for (let j = 0; j < 4; j++) {
-                            if (prevValue && prevSquares[j][i].value == prevValue) {
-                                arr[freeIndex - 1][i].value = prevValue * 2;
-                                prevValue = 0;
-                            } else if (prevSquares[j][i].value) {
-                                arr[freeIndex][i].value = prevSquares[j][i].value;
-                                prevValue = prevSquares[j][i].value;
-                                freeIndex++;
-                            }
+                for (let i = 0; i < 4; i++) {
+                    freeIndex = 0;
+                    prevValue = 0;
+                    for (let j = 0; j < 4; j++) {
+                        if (prevValue && squaresRef.current[j][i].value == prevValue) {
+                            arr[freeIndex - 1][i].value = prevValue * 2;
+                            addScoreRef.current += prevValue * 2;
+                            prevValue = 0;
+                        } else if (squaresRef.current[j][i].value) {
+                            arr[freeIndex][i].value = squaresRef.current[j][i].value;
+                            prevValue = squaresRef.current[j][i].value;
+                            freeIndex++;
                         }
                     }
-
-                    return initializeRandomSquare(arr);
-                });
+                }
             } else if (event.key == "ArrowDown") {
-                setSquares((prevSquares) => {
-                    for (let i = 3; i >= 0; i--) {
-                        freeIndex = 3;
-                        prevValue = 0;
-                        for (let j = 3; j >= 0; j--) {
-                            if (prevValue && prevSquares[j][i].value == prevValue) {
-                                arr[freeIndex + 1][i].value = prevValue * 2;
-                                prevValue = 0;
-                            } else if (prevSquares[j][i].value) {
-                                arr[freeIndex][i].value = prevSquares[j][i].value;
-                                prevValue = prevSquares[j][i].value;
-                                freeIndex--;
-                            }
+                for (let i = 3; i >= 0; i--) {
+                    freeIndex = 3;
+                    prevValue = 0;
+                    for (let j = 3; j >= 0; j--) {
+                        if (prevValue && squaresRef.current[j][i].value == prevValue) {
+                            arr[freeIndex + 1][i].value = prevValue * 2;
+                            addScoreRef.current += prevValue * 2;
+                            prevValue = 0;
+                        } else if (squaresRef.current[j][i].value) {
+                            arr[freeIndex][i].value = squaresRef.current[j][i].value;
+                            prevValue = squaresRef.current[j][i].value;
+                            freeIndex--;
                         }
                     }
-
-                    return initializeRandomSquare(arr);
-                });
+                }
             }
+            setScore(addScoreRef.current);
+            setSquares(initializeRandomSquare(arr));
         }
 
         window.addEventListener("keydown", handleKeyDown);

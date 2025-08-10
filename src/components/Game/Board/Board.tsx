@@ -24,6 +24,21 @@ function initializeRandomSquare(arr: SquareInterface[][]) {
     return arr;
 }
 
+function isUserLost(arr: SquareInterface[][]): boolean {
+    // check if there are empty squares
+    if (arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0))) {
+        return false;
+    }
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            if (arr[i][j].value === arr[i + 1]?.[j]?.value || arr[i][j].value === arr[i]?.[j + 1]?.value) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function Board({ setScore }: Props) {
     // create a 4x4 matrix filled with SquareInterface objects
     const [squares, setSquares] = useState(() => {
@@ -135,8 +150,11 @@ function Board({ setScore }: Props) {
                     }
                 }
             }
+
+            if (arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0))) {
+                setSquares(initializeRandomSquare(arr));
+            }
             setScore(addScoreRef.current);
-            setSquares(initializeRandomSquare(arr));
         }
 
         window.addEventListener("keydown", handleKeyDown);
@@ -149,16 +167,21 @@ function Board({ setScore }: Props) {
 
     return (
         <>
-            <div className="border-stone-300 border-5 rounded-lg">
-                {squares.map((squareArr, index) => {
-                    return (
-                        <div className="row" key={index}>
-                            {squareArr.map((square: SquareInterface) => {
-                                return <Square squareValue={square.value} key={square.id} />;
-                            })}
-                        </div>
-                    );
-                })}
+            <div className="container">
+                <div className="border-stone-300 border-5 rounded-lg">
+                    {squares.map((squareArr, index) => {
+                        return (
+                            <div className="row" key={index}>
+                                {squareArr.map((square: SquareInterface) => {
+                                    return <Square squareValue={square.value} key={square.id} />;
+                                })}
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className={`end-game rounded-lg ${isUserLost(squares) ? "" : "-z-1"}`}>
+                    <h1>Game over!</h1>
+                </div>
             </div>
         </>
     );

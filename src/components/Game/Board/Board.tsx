@@ -39,6 +39,10 @@ function isUserLost(arr: SquareInterface[][]): boolean {
     return true;
 }
 
+function isUserWon(arr: SquareInterface[][]): boolean {
+    return arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 2048));
+}
+
 function Board({ setScore }: Props) {
     // create a 4x4 matrix filled with SquareInterface objects
     const [squares, setSquares] = useState(() => {
@@ -69,7 +73,12 @@ function Board({ setScore }: Props) {
     // handle keyboard event
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
-            if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+            if (
+                !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key) ||
+                isUserLost(squaresRef.current) ||
+                isUserWon(squaresRef.current)
+            )
+                return;
 
             // create a 4x4 matrix filled with SquareInterface objects
             let arr = new Array();
@@ -179,8 +188,11 @@ function Board({ setScore }: Props) {
                         );
                     })}
                 </div>
-                <div className={`end-game rounded-lg ${isUserLost(squares) ? "" : "-z-1"}`}>
-                    <h1>Game over!</h1>
+                <div className={`end-game rounded-lg ${isUserLost(squares) || isUserWon(squares) ? "" : "-z-1"}`}>
+                    <h1>
+                        {isUserLost(squares) && !isUserWon(squares) ? "Game over!" : ""}
+                        {isUserWon(squares) ? "You have won!" : ""}
+                    </h1>
                 </div>
             </div>
         </>

@@ -21,12 +21,14 @@ function Square({ squareValue }: Props) {
     };
 
     return (
-        <div
-            className={`square flex justify-center items-center ${
-                squareColor[squareValue] ?? "bg-amber-50"
-            } border-stone-300 border-5`}
-        >
-            <h1 className="font-semibold">{squareValue.toString()}</h1>
+        <div className={`h-[125px] w-[125px] bg-stone-300 border-stone-300 border-5`}>
+            <div
+                className={`${
+                    squareColor[squareValue] ?? "bg-amber-50"
+                } rounded-lg h-full w-full flex justify-center items-center`}
+            >
+                <h1 className="font-semibold">{squareValue ? squareValue.toString() : ""}</h1>
+            </div>
         </div>
     );
 }

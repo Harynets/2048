@@ -161,9 +161,15 @@ function Board({ setScore }: Props) {
             }
 
             if (arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0))) {
-                setSquares(initializeRandomSquare(arr));
+                arr = initializeRandomSquare(arr);
+                setSquares(arr);
             }
             setScore(addScoreRef.current);
+
+            // update best score
+            if ((isUserLost(arr) || isUserWon(arr)) && addScoreRef.current > Number(localStorage.getItem("bestScore"))) {
+                localStorage.setItem("bestScore", addScoreRef.current.toString());
+            }
         }
 
         window.addEventListener("keydown", handleKeyDown);

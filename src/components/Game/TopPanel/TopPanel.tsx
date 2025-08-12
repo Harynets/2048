@@ -8,8 +8,10 @@ interface Props {
 function TopPanel({ score }: Props) {
     return (
         <>
-            <Score title="Score" score={score} />
-            <Score title="Best score" score={Number(localStorage.getItem("bestScore")) || 0} />
+            <div className="score flex justify-end">
+                <Score title="Score" score={score} />
+                <Score title="Best score" score={Number(localStorage.getItem("bestScore")) || 0} />
+            </div>
         </>
     );
 }

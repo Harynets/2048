@@ -5,6 +5,8 @@ import "./Board.css";
 interface SquareInterface {
     id: number;
     value: number;
+    moveToI: number;
+    moveToJ: number;
 }
 
 interface Props {
@@ -51,7 +53,7 @@ function Board({ setScore }: Props) {
         for (let i = 0; i < 4; i++) {
             arr.push(new Array());
             for (let j = 0; j < 4; j++) {
-                arr[i].push({ id: i * 4 + j, value: 0 } as SquareInterface);
+                arr[i].push({ id: i * 4 + j, value: 0, moveToI: 0, moveToJ: 0 } as SquareInterface);
             }
         }
 
@@ -88,6 +90,8 @@ function Board({ setScore }: Props) {
                     arr[i].push({
                         id: i * 4 + j,
                         value: 0,
+                        moveToI: 0,
+                        moveToJ: 0,
                     } as SquareInterface);
                 }
             }
@@ -95,84 +99,159 @@ function Board({ setScore }: Props) {
             let freeIndex, prevValue: number;
 
             if (event.key == "ArrowLeft") {
+                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
+                // calculate offsets for the move animation
                 for (let i = 0; i < 4; i++) {
-                    freeIndex = 0;
-                    prevValue = 0;
+                    let freeIndex = 0;
                     for (let j = 0; j < 4; j++) {
-                        if (prevValue && squaresRef.current[i][j].value == prevValue) {
-                            arr[i][freeIndex - 1].value = prevValue * 2;
-                            addScoreRef.current += prevValue * 2;
-                            prevValue = 0;
-                        } else if (squaresRef.current[i][j].value) {
-                            arr[i][freeIndex].value = squaresRef.current[i][j].value;
-                            prevValue = squaresRef.current[i][j].value;
+                        if (squaresRef.current[i][j].value) {
+                            coordsArr[i][j].moveToJ = freeIndex - j;
                             freeIndex++;
                         }
                     }
                 }
-            } else if (event.key == "ArrowRight") {
-                for (let i = 3; i >= 0; i--) {
-                    freeIndex = 3;
-                    prevValue = 0;
-                    for (let j = 3; j >= 0; j--) {
-                        if (prevValue && squaresRef.current[i][j].value == prevValue) {
-                            arr[i][freeIndex + 1].value = prevValue * 2;
-                            addScoreRef.current += prevValue * 2;
-                            prevValue = 0;
-                        } else if (squaresRef.current[i][j].value) {
-                            arr[i][freeIndex].value = squaresRef.current[i][j].value;
-                            prevValue = squaresRef.current[i][j].value;
-                            freeIndex--;
+                // start animation
+                setSquares(coordsArr);
+                // wait for the end of animation and update squares array, merge squares
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) {
+                        freeIndex = 0;
+                        prevValue = 0;
+                        for (let j = 0; j < 4; j++) {
+                            if (prevValue && squaresRef.current[i][j].value == prevValue) {
+                                arr[i][freeIndex - 1].value = prevValue * 2;
+                                addScoreRef.current += prevValue * 2;
+                                prevValue = 0;
+                            } else if (squaresRef.current[i][j].value) {
+                                arr[i][freeIndex].value = squaresRef.current[i][j].value;
+                                prevValue = squaresRef.current[i][j].value;
+                                freeIndex++;
+                            }
                         }
                     }
-                }
-            } else if (event.key == "ArrowUp") {
-                for (let i = 0; i < 4; i++) {
-                    freeIndex = 0;
-                    prevValue = 0;
-                    for (let j = 0; j < 4; j++) {
-                        if (prevValue && squaresRef.current[j][i].value == prevValue) {
-                            arr[freeIndex - 1][i].value = prevValue * 2;
-                            addScoreRef.current += prevValue * 2;
-                            prevValue = 0;
-                        } else if (squaresRef.current[j][i].value) {
-                            arr[freeIndex][i].value = squaresRef.current[j][i].value;
-                            prevValue = squaresRef.current[j][i].value;
-                            freeIndex++;
-                        }
-                    }
-                }
-            } else if (event.key == "ArrowDown") {
-                for (let i = 3; i >= 0; i--) {
-                    freeIndex = 3;
-                    prevValue = 0;
-                    for (let j = 3; j >= 0; j--) {
-                        if (prevValue && squaresRef.current[j][i].value == prevValue) {
-                            arr[freeIndex + 1][i].value = prevValue * 2;
-                            addScoreRef.current += prevValue * 2;
-                            prevValue = 0;
-                        } else if (squaresRef.current[j][i].value) {
-                            arr[freeIndex][i].value = squaresRef.current[j][i].value;
-                            prevValue = squaresRef.current[j][i].value;
-                            freeIndex--;
-                        }
-                    }
-                }
-            }
 
+                    updateAfterMove(arr);
+                }, 100);
+            } else if (event.key == "ArrowRight") {
+                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
+                // calculate offsets for the move animation
+                for (let i = 3; i >= 0; i--) {
+                    let freeIndex = 3;
+                    for (let j = 3; j >= 0; j--) {
+                        if (squaresRef.current[i][j].value) {
+                            coordsArr[i][j].moveToJ = freeIndex - j;
+                            freeIndex--;
+                        }
+                    }
+                }
+                // start animation
+                setSquares(coordsArr);
+                // wait for the end of animation and update squares array, merge squares
+                setTimeout(() => {
+                    for (let i = 3; i >= 0; i--) {
+                        freeIndex = 3;
+                        prevValue = 0;
+                        for (let j = 3; j >= 0; j--) {
+                            if (prevValue && squaresRef.current[i][j].value == prevValue) {
+                                arr[i][freeIndex + 1].value = prevValue * 2;
+                                addScoreRef.current += prevValue * 2;
+                                prevValue = 0;
+                            } else if (squaresRef.current[i][j].value) {
+                                arr[i][freeIndex].value = squaresRef.current[i][j].value;
+                                prevValue = squaresRef.current[i][j].value;
+                                freeIndex--;
+                            }
+                        }
+                    }
+
+                    updateAfterMove(arr);
+                }, 100);
+            } else if (event.key == "ArrowUp") {
+                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
+                // calculate offsets for the move animation
+                for (let i = 0; i < 4; i++) {
+                    let freeIndex = 0;
+                    for (let j = 0; j < 4; j++) {
+                        if (squaresRef.current[j][i].value) {
+                            coordsArr[j][i].moveToI = freeIndex - j;
+                            freeIndex++;
+                        }
+                    }
+                }
+                // start animation
+                setSquares(coordsArr);
+                // wait for the end of animation and update squares array, merge squares
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) {
+                        freeIndex = 0;
+                        prevValue = 0;
+                        for (let j = 0; j < 4; j++) {
+                            if (prevValue && squaresRef.current[j][i].value == prevValue) {
+                                arr[freeIndex - 1][i].value = prevValue * 2;
+                                addScoreRef.current += prevValue * 2;
+                                prevValue = 0;
+                            } else if (squaresRef.current[j][i].value) {
+                                arr[freeIndex][i].value = squaresRef.current[j][i].value;
+                                prevValue = squaresRef.current[j][i].value;
+                                freeIndex++;
+                            }
+                        }
+                    }
+
+                    updateAfterMove(arr);
+                }, 100);
+            } else if (event.key == "ArrowDown") {
+                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
+                // calculate offsets for the move animation
+                for (let i = 3; i >= 0; i--) {
+                    let freeIndex = 3;
+                    for (let j = 3; j >= 0; j--) {
+                        if (squaresRef.current[j][i].value) {
+                            coordsArr[j][i].moveToI = freeIndex - j;
+                            freeIndex--;
+                        }
+                    }
+                }
+                // start animation
+                setSquares(coordsArr);
+                // wait for the end of animation and update squares array, merge squares
+                setTimeout(() => {
+                    for (let i = 3; i >= 0; i--) {
+                        freeIndex = 3;
+                        prevValue = 0;
+                        for (let j = 3; j >= 0; j--) {
+                            if (prevValue && squaresRef.current[j][i].value == prevValue) {
+                                arr[freeIndex + 1][i].value = prevValue * 2;
+                                addScoreRef.current += prevValue * 2;
+                                prevValue = 0;
+                            } else if (squaresRef.current[j][i].value) {
+                                arr[freeIndex][i].value = squaresRef.current[j][i].value;
+                                prevValue = squaresRef.current[j][i].value;
+                                freeIndex--;
+                            }
+                        }
+                    }
+
+                    updateAfterMove(arr);
+                }, 100);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        function updateAfterMove(arr: SquareInterface[][]) {
+            // add a new square if there is at least one empty cell
             if (arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0))) {
                 arr = initializeRandomSquare(arr);
                 setSquares(arr);
             }
-            setScore(addScoreRef.current);
 
+            setScore(addScoreRef.current);
             // update best score
             if ((isUserLost(arr) || isUserWon(arr)) && addScoreRef.current > Number(localStorage.getItem("bestScore"))) {
                 localStorage.setItem("bestScore", addScoreRef.current.toString());
             }
         }
-
-        window.addEventListener("keydown", handleKeyDown);
 
         // cleanup
         return () => {
@@ -182,13 +261,20 @@ function Board({ setScore }: Props) {
 
     return (
         <>
-            <div className="container">
-                <div className="border-stone-300 border-5 rounded-lg">
+            <div className="container relative">
+                <div className="border-stone-300 border-5 rounded-lg ">
                     {squares.map((squareArr, index) => {
                         return (
                             <div className="row" key={index}>
                                 {squareArr.map((square: SquareInterface) => {
-                                    return <Square squareValue={square.value} key={square.id} />;
+                                    return (
+                                        <Square
+                                            squareValue={square.value}
+                                            moveToI={square.moveToI}
+                                            moveToJ={square.moveToJ}
+                                            key={square.id}
+                                        />
+                                    );
                                 })}
                             </div>
                         );

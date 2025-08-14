@@ -3,9 +3,11 @@ import "./Square.css";
 
 interface Props {
     squareValue: number;
+    moveToI: number;
+    moveToJ: number;
 }
 
-function Square({ squareValue }: Props) {
+function Square({ squareValue, moveToI, moveToJ }: Props) {
     const squareColor: { [key: number]: string } = {
         2: "bg-yellow-200",
         4: "bg-yellow-300",
@@ -22,12 +24,19 @@ function Square({ squareValue }: Props) {
 
     return (
         <div className={`h-[125px] w-[125px] bg-stone-300 border-stone-300 border-5`}>
-            <div
-                className={`${
-                    squareColor[squareValue] ?? "bg-amber-50"
-                } rounded-lg h-full w-full flex justify-center items-center`}
-            >
-                <h1 className="font-semibold">{squareValue ? squareValue.toString() : ""}</h1>
+            <div className="bg-amber-50 rounded-lg h-full w-full">
+                <div
+                    className={`${
+                        squareColor[squareValue] ?? "bg-amber-50"
+                    } rounded-lg h-full w-full flex justify-center items-center ${
+                        moveToJ || moveToI ? "transition-transform duration-100 ease-in-out relative z-2" : ""
+                    }`}
+                    style={{
+                        transform: `translate(${moveToJ * 125}px, ${moveToI * 125}px)`,
+                    }}
+                >
+                    <h1 className="font-semibold">{squareValue ? squareValue.toString() : ""}</h1>
+                </div>
             </div>
         </div>
     );

@@ -5,9 +5,10 @@ interface Props {
     squareValue: number;
     moveToI: number;
     moveToJ: number;
+    isNew: boolean;
 }
 
-function Square({ squareValue, moveToI, moveToJ }: Props) {
+function Square({ squareValue, moveToI, moveToJ, isNew }: Props) {
     const squareColor: { [key: number]: string } = {
         2: "bg-yellow-200",
         4: "bg-yellow-300",
@@ -30,7 +31,7 @@ function Square({ squareValue, moveToI, moveToJ }: Props) {
                         squareColor[squareValue] ?? "bg-amber-50"
                     } rounded-lg h-full w-full flex justify-center items-center ${
                         moveToJ || moveToI ? "transition-transform duration-100 ease-in-out relative z-2" : ""
-                    }`}
+                    } ${isNew && "initialize-square"}`}
                     style={{
                         transform: `translate(${moveToJ * 125}px, ${moveToI * 125}px)`,
                     }}

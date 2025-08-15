@@ -7,6 +7,7 @@ interface SquareInterface {
     value: number;
     moveToI: number;
     moveToJ: number;
+    isNew: boolean;
 }
 
 interface Props {
@@ -23,6 +24,7 @@ function initializeRandomSquare(arr: SquareInterface[][]) {
     }
 
     arr[randomIndexI][randomIndexJ].value = 2;
+    arr[randomIndexI][randomIndexJ].isNew = true;
     return arr;
 }
 
@@ -53,7 +55,7 @@ function Board({ setScore }: Props) {
         for (let i = 0; i < 4; i++) {
             arr.push(new Array());
             for (let j = 0; j < 4; j++) {
-                arr[i].push({ id: i * 4 + j, value: 0, moveToI: 0, moveToJ: 0 } as SquareInterface);
+                arr[i].push({ id: i * 4 + j, value: 0, moveToI: 0, moveToJ: 0, isNew: false } as SquareInterface);
             }
         }
 
@@ -92,6 +94,7 @@ function Board({ setScore }: Props) {
                         value: 0,
                         moveToI: 0,
                         moveToJ: 0,
+                        isNew: false,
                     } as SquareInterface);
                 }
             }
@@ -272,6 +275,7 @@ function Board({ setScore }: Props) {
                                             squareValue={square.value}
                                             moveToI={square.moveToI}
                                             moveToJ={square.moveToJ}
+                                            isNew={square.isNew}
                                             key={square.id}
                                         />
                                     );

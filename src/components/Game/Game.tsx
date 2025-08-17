@@ -43,19 +43,29 @@ function isUserWon(arr: SquareInterface[][]): boolean {
     return arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 2048));
 }
 
+function createSquareInterfaceObjMatrix() {
+    let arr: SquareInterface[][] = [];
+    for (let i = 0; i < 4; i++) {
+        arr.push(new Array());
+        for (let j = 0; j < 4; j++) {
+            arr[i].push({
+                id: i * 4 + j,
+                value: 0,
+                moveToI: 0,
+                moveToJ: 0,
+                isNew: false,
+            } as SquareInterface);
+        }
+    }
+    return arr;
+}
+
 function Game() {
     const [score, setScore] = useState(0);
 
     // create a 4x4 matrix filled with SquareInterface objects
     const [squares, setSquares] = useState(() => {
-        let arr: SquareInterface[][] = [];
-
-        for (let i = 0; i < 4; i++) {
-            arr.push(new Array());
-            for (let j = 0; j < 4; j++) {
-                arr[i].push({ id: i * 4 + j, value: 0, moveToI: 0, moveToJ: 0, isNew: false } as SquareInterface);
-            }
-        }
+        let arr: SquareInterface[][] = createSquareInterfaceObjMatrix();
 
         // initialize two random squares with value of '2'
         arr = initializeRandomSquare(arr);
@@ -82,25 +92,12 @@ function Game() {
             )
                 return;
 
-            // create a 4x4 matrix filled with SquareInterface objects
-            let arr = new Array();
-            for (let i = 0; i < 4; i++) {
-                arr.push(new Array());
-                for (let j = 0; j < 4; j++) {
-                    arr[i].push({
-                        id: i * 4 + j,
-                        value: 0,
-                        moveToI: 0,
-                        moveToJ: 0,
-                        isNew: false,
-                    } as SquareInterface);
-                }
-            }
+            let arr = createSquareInterfaceObjMatrix();
 
             let freeIndex, prevValue: number;
+            const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
 
             if (event.key == "ArrowLeft") {
-                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
                 // calculate offsets for the move animation
                 for (let i = 0; i < 4; i++) {
                     let freeIndex = 0;
@@ -134,7 +131,6 @@ function Game() {
                     updateAfterMove(arr);
                 }, 100);
             } else if (event.key == "ArrowRight") {
-                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
                 // calculate offsets for the move animation
                 for (let i = 3; i >= 0; i--) {
                     let freeIndex = 3;
@@ -168,7 +164,6 @@ function Game() {
                     updateAfterMove(arr);
                 }, 100);
             } else if (event.key == "ArrowUp") {
-                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
                 // calculate offsets for the move animation
                 for (let i = 0; i < 4; i++) {
                     let freeIndex = 0;
@@ -202,7 +197,6 @@ function Game() {
                     updateAfterMove(arr);
                 }, 100);
             } else if (event.key == "ArrowDown") {
-                const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell })));
                 // calculate offsets for the move animation
                 for (let i = 3; i >= 0; i--) {
                     let freeIndex = 3;
@@ -260,9 +254,20 @@ function Game() {
         };
     }, []);
 
+    function startNewGame() {
+        let arr = createSquareInterfaceObjMatrix();
+        addScoreRef.current = 0;
+        setScore(addScoreRef.current);
+
+        // initialize two random squares with value of '2'
+        arr = initializeRandomSquare(arr);
+        arr = initializeRandomSquare(arr);
+        setSquares(arr);
+    }
+
     return (
         <>
-            <TopPanel score={score} />
+            <TopPanel score={score} startNewGame={startNewGame} />
             <Board squares={squares} isUserLost={isUserLost} isUserWon={isUserWon} />
         </>
     );

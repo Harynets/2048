@@ -10,7 +10,9 @@ interface Props {
 function TopPanel({ score, startNewGame }: Props) {
     return (
         <>
-            <NewGameButton startNewGame={startNewGame} />
+            <div className="flex justify-end">
+                <NewGameButton startNewGame={startNewGame} />
+            </div>
             <div className="score flex justify-end">
                 <Score title="Score" score={score} />
                 <Score title="Best score" score={Number(localStorage.getItem("bestScore")) || 0} />

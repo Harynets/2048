@@ -13,7 +13,7 @@ function Board({ squares, isUserLost, isUserWon }: Props) {
     return (
         <>
             <div className="container relative">
-                <div className="border-stone-300 border-5 rounded-lg ">
+                <div className="border-stone-300 border-5 rounded-lg shadow-sm">
                     {squares.map((squareArr, index) => {
                         return (
                             <div className="row" key={index}>

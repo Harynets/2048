@@ -10,3 +10,19 @@
 .initialize-square {
     animation: scaleIn 0.165s ease-in-out;
 }
+
+@keyframes scaleBounce {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.merge {
+    animation: scaleBounce 0.35s ease-in-out;
+}

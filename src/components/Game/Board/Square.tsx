@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import "./Square.css";
 
 interface Props {
@@ -6,9 +6,10 @@ interface Props {
     moveToI: number;
     moveToJ: number;
     isNew: boolean;
+    isMerged: boolean;
 }
 
-function Square({ squareValue, moveToI, moveToJ, isNew }: Props) {
+function Square({ squareValue, moveToI, moveToJ, isNew, isMerged }: Props) {
     const squareColor: { [key: number]: string } = {
         2: "bg-yellow-200",
         4: "bg-yellow-300",
@@ -23,15 +24,27 @@ function Square({ squareValue, moveToI, moveToJ, isNew }: Props) {
         2048: "bg-indigo-800 text-white",
     };
 
+    // add class for merge animation
+    const squareRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (!isMerged || !squareRef.current) return;
+
+        // if the square already has the "merge" class, remove it and add it back to restart the animation
+        squareRef.current.classList.remove("merge");
+        void squareRef.current.offsetWidth; // force reflow
+        squareRef.current.classList.add("merge");
+    }, [squareValue]);
+
     return (
         <div className={`h-[125px] w-[125px] bg-stone-300 border-stone-300 border-5`}>
             <div className="bg-amber-50 rounded-lg h-full w-full">
                 <div
+                    ref={squareRef}
                     className={`${
                         squareColor[squareValue] ?? "bg-amber-50"
                     } rounded-lg h-full w-full flex justify-center items-center ${
                         moveToJ || moveToI ? "transition-transform duration-100 ease-in-out relative z-2" : ""
-                    } ${isNew && "initialize-square"}`}
+                    } ${isNew && "initialize-square"} `}
                     style={{
                         transform: `translate(${moveToJ * 125}px, ${moveToI * 125}px)`,
                     }}

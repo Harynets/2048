@@ -8,6 +8,7 @@ export interface SquareInterface {
     moveToI: number;
     moveToJ: number;
     isNew: boolean;
+    isMerged: boolean;
 }
 
 function initializeRandomSquare(arr: SquareInterface[][]) {
@@ -54,6 +55,7 @@ function createSquareInterfaceObjMatrix() {
                 moveToI: 0,
                 moveToJ: 0,
                 isNew: false,
+                isMerged: false,
             } as SquareInterface);
         }
     }
@@ -120,6 +122,7 @@ function Game() {
                                 arr[i][freeIndex - 1].value = prevValue * 2;
                                 addScoreRef.current += prevValue * 2;
                                 prevValue = 0;
+                                arr[i][freeIndex - 1].isMerged = true;
                             } else if (squaresRef.current[i][j].value) {
                                 arr[i][freeIndex].value = squaresRef.current[i][j].value;
                                 prevValue = squaresRef.current[i][j].value;
@@ -153,6 +156,7 @@ function Game() {
                                 arr[i][freeIndex + 1].value = prevValue * 2;
                                 addScoreRef.current += prevValue * 2;
                                 prevValue = 0;
+                                arr[i][freeIndex + 1].isMerged = true;
                             } else if (squaresRef.current[i][j].value) {
                                 arr[i][freeIndex].value = squaresRef.current[i][j].value;
                                 prevValue = squaresRef.current[i][j].value;
@@ -186,6 +190,7 @@ function Game() {
                                 arr[freeIndex - 1][i].value = prevValue * 2;
                                 addScoreRef.current += prevValue * 2;
                                 prevValue = 0;
+                                arr[freeIndex - 1][i].isMerged = true;
                             } else if (squaresRef.current[j][i].value) {
                                 arr[freeIndex][i].value = squaresRef.current[j][i].value;
                                 prevValue = squaresRef.current[j][i].value;
@@ -219,6 +224,7 @@ function Game() {
                                 arr[freeIndex + 1][i].value = prevValue * 2;
                                 addScoreRef.current += prevValue * 2;
                                 prevValue = 0;
+                                arr[freeIndex + 1][i].isMerged = true;
                             } else if (squaresRef.current[j][i].value) {
                                 arr[freeIndex][i].value = squaresRef.current[j][i].value;
                                 prevValue = squaresRef.current[j][i].value;

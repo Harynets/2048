@@ -24,6 +24,7 @@ function Board({ squares, isUserLost, isUserWon }: Props) {
                                             moveToI={square.moveToI}
                                             moveToJ={square.moveToJ}
                                             isNew={square.isNew}
+                                            isMerged={square.isMerged}
                                             key={square.id}
                                         />
                                     );

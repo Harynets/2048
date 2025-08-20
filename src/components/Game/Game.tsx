@@ -212,8 +212,11 @@ function Game() {
         window.addEventListener("keydown", handleKeyDown);
 
         function updateAfterMove(arr: SquareInterface[][]) {
-            // add a new square if there is at least one empty cell
-            if (arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0))) {
+            // add a new square if there is at least one empty cell and move changed array
+            if (
+                arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0)) &&
+                !arr.flat().every((elem, index) => elem.value === squaresRef.current.flat()[index].value)
+            ) {
                 arr = initializeRandomSquare(arr);
                 setSquares(arr);
             }

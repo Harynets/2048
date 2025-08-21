@@ -9,15 +9,20 @@ interface Props {
 
 function TopPanel({ score, startNewGame }: Props) {
     return (
-        <>
-            <div className="flex justify-end">
-                <NewGameButton startNewGame={startNewGame} />
+        <div className="flex">
+            <div className="flex items-end w-1/2 mb-3">
+                <p className="text-7xl font-medium">2048</p>
             </div>
-            <div className="score flex justify-end">
-                <Score title="Score" score={score} />
-                <Score title="Best score" score={Number(localStorage.getItem("bestScore")) || 0} />
+            <div className="flex flex-col w-1/2">
+                <div className="flex justify-end">
+                    <NewGameButton startNewGame={startNewGame} />
+                </div>
+                <div className="flex justify-end">
+                    <Score title="Score" score={score} />
+                    <Score title="Best score" score={Number(localStorage.getItem("bestScore")) || 0} />
+                </div>
             </div>
-        </>
+        </div>
     );
 }
 

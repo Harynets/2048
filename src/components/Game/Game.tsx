@@ -64,7 +64,11 @@ function createSquareInterfaceObjMatrix() {
 }
 
 function Game() {
+    const MOVE_ANIMATION_DURATION = 100;
     const [score, setScore] = useState(0);
+
+    const moveQueueRef = useRef<string[]>([]);
+    const isAnimationRef = useRef(false);
 
     // create a 4x4 matrix filled with SquareInterface objects
     const [squares, setSquares] = useState(() => {
@@ -107,6 +111,11 @@ function Game() {
     }
 
     function handleMove(direction: string) {
+        if (isAnimationRef.current) {
+            moveQueueRef.current.push(direction);
+            return;
+        }
+        isAnimationRef.current = true;
         let arr = createSquareInterfaceObjMatrix(); // result array after move
         const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell }))); // copy for animation offsets
 
@@ -221,28 +230,38 @@ function Game() {
         updateAfterMove(arr, coordsArr);
     }
     function updateAfterMove(arr: SquareInterface[][], coordsArr: SquareInterface[][]) {
-        // start animation
-        setSquares(coordsArr);
-        // wait for the end of animation and update squares array, merge squares
-        setTimeout(() => {
-            // add a new square if there is at least one empty cell and move changed array
-            if (
-                arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0)) &&
-                !arr.flat().every((elem, index) => elem.value === squaresRef.current.flat()[index].value)
-            ) {
-                arr = initializeRandomSquare(arr);
-                setSquares(arr);
-            }
+        setSquares(coordsArr); // start animation
 
-            setScore(addScoreRef.current);
-            // update best score
-            if ((isUserLost(arr) || isUserWon(arr)) && addScoreRef.current > Number(localStorage.getItem("bestScore"))) {
-                localStorage.setItem("bestScore", addScoreRef.current.toString());
-            }
-        }, 100);
+        const hasSquaresArrChanged = !arr.flat().every((elem, index) => elem.value === squaresRef.current.flat()[index].value);
+        // wait for the end of animation and update squares array, merge squares
+        setTimeout(
+            () => {
+                // add a new square if there is at least one empty cell and move changed array
+                if (arr.some((row: SquareInterface[]) => row.some((elem) => elem.value === 0)) && hasSquaresArrChanged) {
+                    arr = initializeRandomSquare(arr);
+                    squaresRef.current = arr;
+                    setSquares(arr);
+                }
+
+                setScore(addScoreRef.current);
+                // update best score
+                if ((isUserLost(arr) || isUserWon(arr)) && addScoreRef.current > Number(localStorage.getItem("bestScore"))) {
+                    localStorage.setItem("bestScore", addScoreRef.current.toString());
+                }
+
+                isAnimationRef.current = false;
+                const next = moveQueueRef.current.shift();
+                if (next) {
+                    return handleMove(next);
+                }
+            },
+            hasSquaresArrChanged ? MOVE_ANIMATION_DURATION : 0 // wait for the end of animation only if move changed board
+        );
     }
 
     function startNewGame() {
+        isAnimationRef.current = false;
+        moveQueueRef.current = [];
         let arr = createSquareInterfaceObjMatrix();
         addScoreRef.current = 0;
         setScore(addScoreRef.current);

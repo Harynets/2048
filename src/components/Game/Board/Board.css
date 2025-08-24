@@ -9,11 +9,11 @@
 @keyframes end-game-animation {
     from {
         background-color: rgba(237, 217, 171, 0);
-        color: #00000000;
+        color: #2b2b1f00;
     }
     to {
         background-color: rgba(237, 217, 171, 0.66);
-        color: #000000;
+        color: #2b2b1f;
     }
 }
 

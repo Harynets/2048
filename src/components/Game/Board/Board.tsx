@@ -33,11 +33,11 @@ function Board({ squares, isUserLost, isUserWon }: Props) {
                         );
                     })}
                 </div>
-                <div className={`end-game rounded-lg ${isUserLost(squares) || isUserWon(squares) ? "" : "-z-1"}`}>
-                    <h1>
+                <div className={`end-game rounded-lg ${isUserLost(squares) || isUserWon(squares) ? "apply-animation" : "-z-1"}`}>
+                    <p className="font-bold text-6xl">
                         {isUserLost(squares) && !isUserWon(squares) ? "Game over!" : ""}
-                        {isUserWon(squares) ? "You have won!" : ""}
-                    </h1>
+                        {isUserWon(squares) ? "You win!" : ""}
+                    </p>
                 </div>
             </div>
         </>

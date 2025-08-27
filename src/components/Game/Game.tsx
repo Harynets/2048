@@ -116,6 +116,7 @@ function Game() {
             return;
         }
         isAnimationRef.current = true;
+        addScoreRef.current = 0;
         let arr = createSquareInterfaceObjMatrix(); // result array after move
         const coordsArr = squaresRef.current.map((row) => row.map((cell) => ({ ...cell }))); // copy for animation offsets
 
@@ -243,10 +244,10 @@ function Game() {
                     setSquares(arr);
                 }
 
-                setScore(addScoreRef.current);
+                setScore((score) => score + addScoreRef.current);
                 // update best score
-                if ((isUserLost(arr) || isUserWon(arr)) && addScoreRef.current > Number(localStorage.getItem("bestScore"))) {
-                    localStorage.setItem("bestScore", addScoreRef.current.toString());
+                if ((isUserLost(arr) || isUserWon(arr)) && score > Number(localStorage.getItem("bestScore"))) {
+                    localStorage.setItem("bestScore", score.toString());
                 }
 
                 isAnimationRef.current = false;
@@ -275,7 +276,7 @@ function Game() {
     return (
         <>
             <SwipeHandler handleMove={handleMove}>
-                <TopPanel score={score} startNewGame={startNewGame} />
+                <TopPanel score={score} addScore={addScoreRef.current} startNewGame={startNewGame} />
                 <Board squares={squares} isUserLost={isUserLost} isUserWon={isUserWon} />
             </SwipeHandler>
         </>

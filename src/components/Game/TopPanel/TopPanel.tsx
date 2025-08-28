@@ -40,7 +40,7 @@ function TopPanel({ score, addScore, startNewGame }: Props) {
                 </div>
                 <div className="flex justify-end">
                     <Score title="Score" score={score}>
-                        <div className="relative">
+                        <div className="relative select-none">
                             <div
                                 ref={addScoreDivRef}
                                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pb-7"

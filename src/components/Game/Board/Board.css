@@ -4,6 +4,7 @@
 
 .container {
     position: relative;
+    user-select: none;
 }
 
 @keyframes end-game-animation {

@@ -66,6 +66,7 @@ function createSquareInterfaceObjMatrix() {
 function Game() {
     const MOVE_ANIMATION_DURATION = 100;
     const [score, setScore] = useState(0);
+    const scoreRef = useRef(score);
 
     const moveQueueRef = useRef<string[]>([]);
     const isAnimationRef = useRef(false);
@@ -244,10 +245,11 @@ function Game() {
                     setSquares(arr);
                 }
 
-                setScore((score) => score + addScoreRef.current);
+                scoreRef.current += addScoreRef.current;
+                setScore(() => scoreRef.current);
                 // update best score
-                if ((isUserLost(arr) || isUserWon(arr)) && score > Number(localStorage.getItem("bestScore"))) {
-                    localStorage.setItem("bestScore", score.toString());
+                if (scoreRef.current > Number(localStorage.getItem("bestScore"))) {
+                    localStorage.setItem("bestScore", scoreRef.current.toString());
                 }
 
                 isAnimationRef.current = false;
@@ -265,7 +267,8 @@ function Game() {
         moveQueueRef.current = [];
         let arr = createSquareInterfaceObjMatrix();
         addScoreRef.current = 0;
-        setScore(addScoreRef.current);
+        scoreRef.current = 0;
+        setScore(0);
 
         // initialize two random squares with value of '2'
         arr = initializeRandomSquare(arr);

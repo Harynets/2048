@@ -27,13 +27,15 @@ function SwipeHandler({ children, handleMove }: Props) {
                 handleMove("ArrowUp");
             }
         }
+        document.documentElement.style.overscrollBehavior = "auto"; // return pull-to-refresh/overscroll to default
     }
 
     return (
         <div
-            onTouchStart={(event) =>
-                (startTouchPoint.current = { screenX: event.touches[0].screenX, screenY: event.touches[0].screenY })
-            }
+            onTouchStart={(event) => {
+                document.documentElement.style.overscrollBehavior = "none"; // prevent page refresh by swiping down
+                startTouchPoint.current = { screenX: event.touches[0].screenX, screenY: event.touches[0].screenY };
+            }}
             onTouchEnd={handleSwipe}
         >
             {children}

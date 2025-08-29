@@ -278,8 +278,8 @@ function Game() {
 
     return (
         <>
+            <TopPanel score={score} addScore={addScoreRef.current} startNewGame={startNewGame} />
             <SwipeHandler handleMove={handleMove}>
-                <TopPanel score={score} addScore={addScoreRef.current} startNewGame={startNewGame} />
                 <Board squares={squares} isUserLost={isUserLost} isUserWon={isUserWon} />
             </SwipeHandler>
         </>

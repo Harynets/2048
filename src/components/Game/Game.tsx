@@ -101,17 +101,13 @@ function Game() {
     }, []);
 
     function handleKeyDown(event: KeyboardEvent) {
-        if (
-            !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key) ||
-            isUserLost(squaresRef.current) ||
-            isUserWon(squaresRef.current)
-        )
-            return;
-
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
         handleMove(event.key);
     }
 
     function handleMove(direction: string) {
+        if (isUserLost(squaresRef.current) || isUserWon(squaresRef.current)) return;
+
         if (isAnimationRef.current) {
             moveQueueRef.current.push(direction);
             return;

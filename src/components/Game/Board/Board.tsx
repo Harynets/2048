@@ -16,7 +16,7 @@ function Board({ squares, isUserLost, isUserWon }: Props) {
                 <div className="border-stone-300 border-5 rounded-lg shadow-sm">
                     {squares.map((squareArr, index) => {
                         return (
-                            <div className="row" key={index}>
+                            <div className="flex" key={index}>
                                 {squareArr.map((square: SquareInterface) => {
                                     return (
                                         <Square

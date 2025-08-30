@@ -32,7 +32,7 @@ function TopPanel({ score, addScore, startNewGame }: Props) {
     return (
         <div className="flex">
             <div className="flex items-end w-1/2 mb-3">
-                <p className="text-7xl font-medium">2048</p>
+                <p className="text-8xl font-medium">2048</p>
             </div>
             <div className="flex flex-col w-1/2">
                 <div className="flex justify-end">

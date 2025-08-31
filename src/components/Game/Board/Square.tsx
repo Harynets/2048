@@ -56,4 +56,12 @@ function Square({ squareValue, moveToI, moveToJ, isNew, isMerged }: Props) {
     );
 }
 
-export default Square;
+export default React.memo(Square, (prev, next) => {
+    return (
+        prev.isMerged === next.isMerged &&
+        prev.isNew === next.isNew &&
+        prev.moveToI === next.moveToI &&
+        prev.moveToJ === next.moveToJ &&
+        prev.squareValue === next.squareValue
+    );
+});

@@ -40,16 +40,20 @@ function Square({ squareValue, moveToI, moveToJ, isNew, isMerged }: Props) {
             <div className="bg-amber-50 rounded-lg h-full w-full">
                 <div
                     ref={squareRef}
-                    className={`${
-                        squareColor[squareValue] ?? "bg-amber-50"
-                    } rounded-lg h-full w-full flex justify-center items-center ${
+                    className={`h-full w-full ${
                         moveToJ || moveToI ? "transition-transform duration-100 ease-in-out relative z-2" : ""
-                    } ${isNew && "initialize-square"} `}
+                    }`}
                     style={{
                         transform: `translate(${moveToJ * 125}px, ${moveToI * 125}px)`,
                     }}
                 >
-                    <h1 className="font-semibold">{squareValue ? squareValue.toString() : ""}</h1>
+                    <div
+                        className={`${isNew && "initialize-square"} ${
+                            squareColor[squareValue] ?? "bg-amber-50"
+                        } h-full w-full flex justify-center items-center rounded-lg`}
+                    >
+                        <h1 className="font-semibold">{squareValue ? squareValue.toString() : ""}</h1>
+                    </div>
                 </div>
             </div>
         </div>

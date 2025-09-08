@@ -23,6 +23,8 @@ function initializeRandomSquare(arr: SquareInterface[][]) {
 
     arr[randomIndexI][randomIndexJ].value = 2;
     arr[randomIndexI][randomIndexJ].isNew = true;
+    arr[randomIndexI][randomIndexJ].moveToI = 0;
+    arr[randomIndexI][randomIndexJ].moveToJ = 0;
     return arr;
 }
 

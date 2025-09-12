@@ -39,7 +39,6 @@ function Square({ squareValue, moveToI, moveToJ, isNew, isMerged }: Props) {
         <div className={`h-[125px] w-[125px] bg-stone-300 border-stone-300 border-5`}>
             <div className="bg-amber-50 rounded-lg h-full w-full">
                 <div
-                    ref={squareRef}
                     className={`h-full w-full ${
                         moveToJ || moveToI ? "transition-transform duration-100 ease-in-out relative z-2" : ""
                     }`}
@@ -48,6 +47,7 @@ function Square({ squareValue, moveToI, moveToJ, isNew, isMerged }: Props) {
                     }}
                 >
                     <div
+                        ref={squareRef}
                         className={`${isNew && "initialize-square"} ${
                             squareColor[squareValue] ?? "bg-amber-50"
                         } h-full w-full flex justify-center items-center rounded-lg`}

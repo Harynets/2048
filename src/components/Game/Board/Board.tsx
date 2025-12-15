@@ -1,7 +1,7 @@
 import React from "react";
 import Square from "./Square";
 import "./Board.css";
-import type { SquareInterface } from "../Game";
+import type { SquareInterface } from "../../../types/SquareInterface";
 
 interface Props {
     squares: SquareInterface[][];

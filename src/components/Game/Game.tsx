@@ -2,15 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Board from "./Board/Board";
 import TopPanel from "./TopPanel/TopPanel";
 import SwipeHandler from "./SwipeHandler";
-
-export interface SquareInterface {
-    id: number;
-    value: number;
-    moveToI: number;
-    moveToJ: number;
-    isNew: boolean;
-    isMerged: boolean;
-}
+import type { SquareInterface } from "../../types/SquareInterface";
 
 function initializeRandomSquare(arr: SquareInterface[][]) {
     // clone arr

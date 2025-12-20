@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Board from "./Board/Board";
 import TopPanel from "./TopPanel/TopPanel";
 import SwipeHandler from "./SwipeHandler";
@@ -221,6 +221,7 @@ function Game() {
 
         updateAfterMove(arr, coordsArr);
     }
+
     function updateAfterMove(arr: SquareInterface[][], coordsArr: SquareInterface[][]) {
         setSquares(coordsArr); // start animation
 

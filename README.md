@@ -1,5 +1,7 @@
 # 2048
 
+📄 Цей README.md доступний: [**Українською 🇺🇦**](README.ua.md)
+
 A web clone of the classic 2048 game, built with **React** & **TypeScript**.
 
 🔗 **Live demo:** https://harynets.github.io/2048/

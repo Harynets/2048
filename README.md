@@ -1,69 +1,61 @@
-# React + TypeScript + Vite
+# 2048
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web clone of the classic 2048 game, built with **React** & **TypeScript**.
 
-Currently, two official plugins are available:
+🔗 **Live demo:** https://harynets.github.io/2048/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-   **React**
+-   **TypeScript**
+-   **Vite**
+-   **CSS**
+-   **HTML**
+-   **Tailwind**
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🖼️ Game Preview
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 🎮 Gameplay
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+![Gameplay](doc/gameplay.gif)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 🏆 Win State
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+![Win](doc/win.gif)
+
+### ❌ Game Over
+
+![Lose](doc/game_over.gif)
+
+---
+
+## ✨ Features
+
+-   🎯 Classic **2048** game mechanics
+-   📱 Swipe support for mobile devices
+-   🎞️ Smooth tile movement, merge and appearance animations
+-   📊 Score tracking and score update animation
+-   📐 Responsive layout
+-   🎨 Styled with **Tailwind CSS**
+-   🚀 Performance optimizations with **React.memo**
+-   🔒 Type-safe logic using **TypeScript**
+
+---
+
+## ⚙️ Installation & Run
+
+```bash
+# Clone the repository
+git clone https://github.com/Harynets/2048.git
+cd 2048
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
